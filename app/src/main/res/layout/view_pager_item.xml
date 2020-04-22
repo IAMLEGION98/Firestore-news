@@ -55,6 +55,7 @@
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_fav"
         android:src="@drawable/ic_favorite_white_24dp"
