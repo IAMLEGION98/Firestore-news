@@ -60,12 +60,7 @@ public class NewsAdapter extends PagerAdapter {
                 Toast.makeText(context,"Liked",Toast.LENGTH_SHORT).show();
             }
         });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"Clicked NEws",Toast.LENGTH_SHORT).show();
-            }
-        });
+
         Picasso.get().load(newsList.get(position).getImage()).into(news_image);
         news_heading.setText(newsList.get(position).getHeading());
         news_description.setText(newsList.get(position).getDescription());

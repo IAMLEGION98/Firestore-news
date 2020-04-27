@@ -6,6 +6,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.widget.Adapter;
 import android.widget.Toast;
 
@@ -25,14 +27,19 @@ import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 
-public class MainActivity extends AppCompatActivity implements IFireStoreLoadDone {
+public class MainActivity extends AppCompatActivity implements IFireStoreLoadDone, GestureDetector.OnGestureListener {
 
+
+    public static final int VELOCITY_THRESHOLD = 100;
+    public static final int SWIPE_THRESHOLD = 100;
     ViewPager viewPager;
     NewsAdapter newsAdapter;
     IFireStoreLoadDone iFireStoreLoadDone;
 
     CollectionReference news;
     AlertDialog dialog;
+    private GestureDetector gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
         dialog = new SpotsDialog.Builder().setContext(this).build();
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         getData();
+
+
+        gestureDetector = new GestureDetector(this);
+
+
     }
 
     private void getData() {
@@ -84,5 +96,70 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
         dialog.dismiss();
 
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent downEvent, MotionEvent moveEvent, float velocityX, float velocityY) {
+        boolean result = false;
+        System.out.println("Gone here");
+        float diffY = moveEvent.getY() - downEvent.getY();
+
+        if(Math.abs(diffY)>SWIPE_THRESHOLD && Math.abs(velocityX)>VELOCITY_THRESHOLD)
+        {
+            if(diffY>0)
+            {
+                onSwipeBottom();
+            }
+            else
+            {
+                onSwipeTop();
+            }
+            result = true;
+        }
+        return result;
+    }
+
+    private void onSwipeTop() {
+        System.out.println("Swiped Up");
+        Toast.makeText(getApplicationContext(),"Swiped Up",Toast.LENGTH_SHORT).show();
+    }
+
+    private void onSwipeBottom() {
+        System.out.println("Swiped Down");
+        Toast.makeText(getApplicationContext(),"Swiped Down",Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 }
