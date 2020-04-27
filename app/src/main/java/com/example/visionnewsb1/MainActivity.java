@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Adapter;
 import android.widget.Toast;
 
@@ -53,10 +54,21 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
         getData();
 
 
-        gestureDetector = new GestureDetector(this);
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
+
+
 
 
     }
+
+
 
     private void getData() {
          dialog.show();
@@ -87,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
     @Override
     public void onFireStoreLoadSuccess(List<News> news) {
        newsAdapter = new NewsAdapter(this,news);
-       viewPager.setAdapter(newsAdapter);
+      viewPager.setAdapter(newsAdapter);
+       gestureDetector = new GestureDetector(this);
        dialog.dismiss();
     }
 
@@ -129,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
         System.out.println("Gone here");
         float diffY = moveEvent.getY() - downEvent.getY();
 
-        if(Math.abs(diffY)>SWIPE_THRESHOLD && Math.abs(velocityX)>VELOCITY_THRESHOLD)
+        if(Math.abs(diffY)>50 && Math.abs(velocityX)>50)
         {
             if(diffY>0)
             {
@@ -158,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements IFireStoreLoadDon
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+         System.out.println("Touched screen");
         gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
